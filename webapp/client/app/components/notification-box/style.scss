@@ -44,5 +44,11 @@
         .name {
             text-transform: uppercase;
         }
+
+        .user-photo {
+            img {
+                width: 100px;
+            }
+        }
     }
 }

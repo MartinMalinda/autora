@@ -22,9 +22,9 @@ export default Ember.Component.extend({
 		return `toggleEntryDropdown${this.get('model.id')}`;
 	}),
 
-	shouldAnimate: computed('didAnimate','initialLoadHappened', function(){
-		return !this.get('didAnimate') && this.get('initialLoadHappened');
-	}),
+	// shouldAnimate: computed('didAnimate','initialLoadHappened', function(){
+	// 	return !this.get('didAnimate') && this.get('initialLoadHappened');
+	// }),
 
 	isAuthor: computed('model.user','session.user',function(){
 		return this.get('model.user.id') === this.get('session.user.id');
@@ -48,12 +48,12 @@ export default Ember.Component.extend({
 		}
 	}),
 
-	loadingObserver: observer('model.isLoaded', function(){
-		var self = this;
-		setTimeout(function(){
-			self.set('didAnimate', true);
-		}, 1500);
-	}),
+	// loadingObserver: observer('model.isLoaded', function(){
+	// 	var self = this;
+	// 	setTimeout(function(){
+	// 		self.set('didAnimate', true);
+	// 	}, 1500);
+	// }),
 
 	likesAreLoaded: observer('model.likes.isFulfilled', 'model.isLoading', function(){
 		if(this.get('model.likes.isFulfilled') && !this.get('model.isLoading') && !this.get('ordered')){

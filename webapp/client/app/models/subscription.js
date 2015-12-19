@@ -45,6 +45,7 @@ export default DS.Model.extend(TimestampSupport, {
   // cachedCompetingEntryCount: attr('number', {defaultValue: 1}),
   // cachedLikeCount: attr('number', {defaultValue: 0}),
 
+
   session: inject.service('session'),
 
   cachedProjectTimestamp: attr('', {defaultValue: now}),
@@ -58,6 +59,11 @@ export default DS.Model.extend(TimestampSupport, {
   cachedLastChildModelCreatedAt: attr('', {defaultValue: ''}),
 
   lastChildModel: computed.alias('subModelChildren.lastObject'),
+
+  isProject: computed('entry', 'pile', function(){
+    console.log(this.get('entry.id'), this.get('pile.id'), 'isProject');
+    return isNone(this.get('entry.id')) && isNone(this.get('pile.id'));
+  }),
 
   subModelChildren: computed('project.piles.[]', 'entry.likes.[]', 'pile.competingEntries.[]', function(){
     let type = this.get('type');
@@ -84,32 +90,15 @@ export default DS.Model.extend(TimestampSupport, {
 
   }),
 
-
-
   lastChildModelCreatedAt: computed('lastChildModel.createdAt', function(){
     // return this.get('lastChildModel.createdAt') ? this.get('lastChildModel.createdAt') : null;
     return this.getWithDefault('lastChildModel.createdAt', false);
   }),
 
   showNotification: computed('lastChildModel.user', function(){
-    const modelCreator = this.get('lastChildModel.user');
+    const modelCreator = this.get('lastChildModel.user') || this.get('isProject');
     return !isNone(modelCreator);
   }),
-
-  // notification: computed('subModelChildren.length', function(){
-  //   let type = this.get('type');
-  //   console.log('notifying');
-
-  //   if(type && this.get('subModelChildren.isFulfilled')){
-
-  //     const childName = this.subscriptionTypes[type].childName;
-  //     const currentCount = this.get('subModelChildren.length');
-
-  //     return `${currentCount} ${currentCount === 1 ? childName : this.subscriptionTypes[type].childPluralLabel}`;
-  //   } else {
-  //     return '';
-  //   }
-  // }),
 
   cacheSubscription(){
     console.log('cache subscription');

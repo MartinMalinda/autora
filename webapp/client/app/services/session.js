@@ -6,7 +6,7 @@ const {computed, isEmpty, inject} = Ember;
 export default SessionService.extend({
 
 
-	dataStore: inject.service('store'),
+	injectedStore: inject.service('store'),
 	subscriptionSorting: ['lastChildModelCreatedAt:desc'],
 	sortedSubscriptions: computed.sort('subscriptions','subscriptionSorting'),
 
@@ -14,7 +14,7 @@ export default SessionService.extend({
 		var uid = this.get('data.authenticated.auth.uid');
 		if (!isEmpty(uid)) {
 
-			var store = this.get('dataStore');
+			var store = this.get('injectedStore');
 			return store.find('user', uid);
 		}
 	}),
@@ -27,7 +27,7 @@ export default SessionService.extend({
 				if(type){
 				return subscription.get(type).then(() => {
 					// return  (subscription.get('notification') != subscription.get('cachedNotification'));
-					return  (subscription.get('lastChildModelCreatedAt') != subscription.get('cachedLastChildModelCreatedAt'));
+					return  (subscription.get('lastChildModelCreatedAt') > subscription.get('cachedLastChildModelCreatedAt'));
 				});
 				}
 		});
@@ -46,23 +46,30 @@ export default SessionService.extend({
 		return subscriptions;
 	}),
 
+	findSubscriptionByModel(model, type){
+		return this.get('subscriptions').findBy(type + '.id', model.get('id'));
+	},
+
 	addSubscription(record, type, project){
 
-		var store = this.get('dataStore');
+		var store = this.get('injectedStore');
 
 		var subscriptionData = {
 			type: type,
 			user: this.get('user'),
 		};
-		record = store.peekRecord(type, record.id);
+		record = store.peekRecord(type, record.get('id'));
 		subscriptionData[type] = record;
+
 		if(type !== 'project'){
 			subscriptionData.project = project;
 		}
 
-		if(type === 'pile'){
-			let alreadyHasThisPileSubscription = this.get('subscriptions').mapBy('pile.id').contains(record.get('id'));
-			if(alreadyHasThisPileSubscription) return true;
+		if(type !== 'entry'){
+			console.log(record);
+			console.log(type);
+			let alreadyHasThisSubscription = this.findSubscriptionByModel(record, type);
+			if(alreadyHasThisSubscription) return true;
 		}
 
 		var user = this.get('user');
@@ -74,9 +81,10 @@ export default SessionService.extend({
 	},
 
 	deleteSubscriptionForModel(type,model){
-		var id = model.get('id');
-		var store = this.get('dataStore');
-		model.get('subscription.content').destroyRecord();
+		var store = this.get('injectedStore');
+		this.get('subscriptions').then(subscriptions => {
+			this.findSubscriptionByModel(model, type).destroyRecord();
+		});
 
 
 	}

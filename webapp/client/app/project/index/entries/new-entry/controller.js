@@ -60,6 +60,7 @@ export default Ember.Controller.extend({
 	addSubscription(entry){
 		var project = this.get('pile.project');
 		console.log('addSubscription');
+		this.get('session').addSubscription(this.get('pile.project'),'project', project);
 		this.get('session').addSubscription(entry,'entry', project);
 		this.get('session').addSubscription(this.get('pile'),'pile', project);
 	},
