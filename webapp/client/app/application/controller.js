@@ -9,6 +9,7 @@ export default Ember.Controller.extend({
 	isInProjectRoute: computed('currentRouteName', function(){
 		return this.get('currentRouteName').substring(0, 7) === 'project';
 	}), 
+	showNotifications: false,
 
 	actions: {
 		toggleCreate(){

@@ -61,7 +61,6 @@ export default DS.Model.extend(TimestampSupport, {
   lastChildModel: computed.alias('subModelChildren.lastObject'),
 
   isProject: computed('entry', 'pile', function(){
-    console.log(this.get('entry.id'), this.get('pile.id'), 'isProject');
     return isNone(this.get('entry.id')) && isNone(this.get('pile.id'));
   }),
 
@@ -77,12 +76,7 @@ export default DS.Model.extend(TimestampSupport, {
           return record.get('user.id') !== currentUserId;
         });
       } else {
-        console.log('===');
-        console.log('childArray',childArray);
-        console.log('childPlural',childPlural);
-        console.log('type',type);
-        console.log('type + . + childPlural',type + '.' + childPlural);
-        console.log('===');
+       
 
         return false;
       }
@@ -95,9 +89,10 @@ export default DS.Model.extend(TimestampSupport, {
     return this.getWithDefault('lastChildModel.createdAt', false);
   }),
 
-  showNotification: computed('lastChildModel.user', function(){
-    const modelCreator = this.get('lastChildModel.user') || this.get('isProject');
-    return !isNone(modelCreator);
+  showNotification: computed('lastChildModel.user','subModelChildren.length', function(){
+    console.log('lastChildModel.user', this.get('lastChildModel.user'));
+    const modelCreator = this.get('lastChildModel.user');
+    return !isNone(modelCreator) || this.get('isProject') && this.get('subModelChildren.length') > 1;
   }),
 
   cacheSubscription(){

@@ -11,7 +11,15 @@
 			{{/if}}
 
 			{{#if subscription.isProject}}
-				{{subscription.lastChildModel.user.username}}'s submission has been accepted in {{link-to subscription.project.name 'project.index.entries' subscription.project}} ({{subscription.subModelChildren.length}} submissions total)
+				{{log 'project'}}
+				{{log subscription.project}}
+				{{log 'project.entries'}}
+				{{log subscription.project.entries}}
+				{{log 'project.entries.lastObject'}}
+				{{log subscription.project.entries.lastObject}}
+				{{log 'project.entries.lastObject.user'}}
+				{{log subscription.project.entries.lastObject.user}}
+				{{subscription.project.entries.lastObject.user.username}}'s submission has been accepted in {{link-to subscription.project.name 'project.index.entries' subscription.project}} ({{subscription.subModelChildren.length}} submissions total)
 			{{/if}}
 			<br>
 			<span class="time">{{moment-from-now subscription.lastChildModelCreatedAt}}</span>

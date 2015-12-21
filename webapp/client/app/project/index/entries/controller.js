@@ -76,15 +76,14 @@ export default Ember.Controller.extend({
 					pile.set('locked', true);
 					pile.save().then(() => {
 						var pile = {
-							project: project,
-							createdAt: Firebase.ServerValue.TIMESTAMP,
-							updatedAt: Firebase.ServerValue.TIMESTAMP
+							project: project
 						};
 
 						this.store.createRecord('pile', pile).save().then(pile => {
 							project.save().then(() => {
 								this.set('model', pile);
 								this.set('lockAlert', {});
+								mostLikedEntry.save();
 							});
 						});
 					});

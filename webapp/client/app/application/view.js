@@ -3,6 +3,7 @@ import Ember from 'ember';
 const {$, computed, inject} = Ember;
 
 export default Ember.Component.extend({
+
     elementId: 'app',
     classNameBindings: ['showNotifications:pushed'],
 
@@ -15,5 +16,7 @@ export default Ember.Component.extend({
     	this.set('notificationBox', this.get('childViews')[0]);
     	$('body').removeClass('au-loading');
     	$('.loading-quote').remove();
+
+        console.log('weird component', this);
     }
 });

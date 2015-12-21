@@ -3,6 +3,7 @@ import Firebase from 'firebase';
 import TimestampSupport from 'client/mixins/timestamp-support';
 
 const {belongsTo, hasMany, attr} = DS;
+// const {computed} = Ember;
 
 
 export default DS.Model.extend(TimestampSupport, {
@@ -24,5 +25,7 @@ export default DS.Model.extend(TimestampSupport, {
   tags: hasMany('tag', {async: true}),
   entries: hasMany('entry', {async: true}),
   piles: hasMany('pile', {async: true}),
+
+  // lastAcceptedEntry:
 
 });
